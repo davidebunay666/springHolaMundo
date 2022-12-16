@@ -1,5 +1,9 @@
 pipeline {
     agent any
+     environment {
+        AWS_ACCESS_KEY_ID     = credentials('jenkins_aws_key_id')
+        AWS_SECRET_ACCESS_KEY = credentials('jenkins_aws_key_secret')
+    }
 
     stages {
         stage('SCM') {
@@ -27,14 +31,15 @@ pipeline {
            }
        }
        
-    stage ("Deploy AKS") {
-           steps {
-             bat(script: 'dir' , returnStdout:true);
-            //bat(script: 'az aks get-credentials --resource-group devops --name devops-cluster  & kubectl config get-contexts --kubeconfig=%KUBE_PATH_CONFIG%', returnStdout: true);
-            //bat(script: 'kubectl config use-context devops-cluster  --kubeconfig=%KUBE_PATH_CONFIG%', returnStdout: true);
-            //bat(script: 'kubectl apply -f k8s.yml --kubeconfig=%KUBE_PATH_CONFIG%', returnStdout: true);         
-           }
-       }
+    stage ('K8S Deploy') {
+            steps {
+              bat (script:  'aws configure set region us-east-1',returnStdout: true);
+              bat(script: 'kubectl config use-context arn:aws:eks:us-east-1:200694411616:cluster/cluster-devops  --kubeconfig=%KUBE_PATH_CONFIG%', returnStdout: true);
+              bat(script: 'Kubectl delete --all pods --kubeconfig=%KUBE_PATH_CONFIG% & kubectl apply -f Devops.yaml --kubeconfig=%KUBE_PATH_CONFIG%', returnStdout: true);
+            }      
+            
+    }
+    
     
     
     }
