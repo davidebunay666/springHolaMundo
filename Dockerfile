@@ -16,6 +16,7 @@ FROM quay.io/simon_neininger_umb/centos7-openjdk8 as deploy
 USER root
 #RUN rm -f /etc/localtime && ln -s /usr/share/zoneinfo/America/Guayaquil /etc/localtime
 
+EXPOSE 8081
 
 COPY --from=compilar /app/demo/target/demo-0.0.1-SNAPSHOT.jar /deployments/
 RUN chgrp -R 0 /deployments && chmod -R g=u /deployments

@@ -1,34 +1,34 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: app-deployment-devops
+  name: app-deployment-springboot
   labels:
-    app: service-devops
+    app: service-devops-springboot
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
-      app: service-devops
+      app: service-devops-springboot
   template:
     metadata:
       labels:
-        app: service-devops
+        app: service-devops-springboot
     spec:
       containers:
-      - name: service-devops
+      - name: service-devops-springboot
         image: davidbunay66/springboot:latest
         ports:
-        - containerPort: 8080
+        - containerPort: 8081
 ---
 kind: Service
 apiVersion: v1
 metadata:
-  name: app-service-devops
+  name: app-service-springboot
 spec:
   type: LoadBalancer
   selector:
-    app: service-devops
+    app: service-devops-springboot
   ports:
   - protocol: TCP
     port: 80
-    targetPort: 8080
+    targetPort: 8081
